@@ -151,6 +151,22 @@ pintos_init (void)
         printf("Pintos currently has %'"PRIu32" kB RAM.",
           init_ram_pages * PGSIZE / 1024);
       }
+       else if (strcmp(command, "shutdown")==0){
+            shutdown_power_off();
+      }
+       else if (strcmp(command, "time")==0){
+        printf("It's been  %d seconds now.", timer_ticks()/TIMER_FREQ); // Prints the time elapsed since boot. Timer ticks when divided by the tick frequency gives the answer in seconds.
+      }
+       else if (strcmp(command, "thread")==0){
+
+      }
+       else if (strcmp(command, "priority")==0){
+
+      }
+       else if (strcmp(command, "exit")==0){
+        printf("Exiting Interactive Mode...Bye!");
+        break;
+      }
       else{
         printf("Error1: Unknown command!");
       }

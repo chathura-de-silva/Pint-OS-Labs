@@ -158,10 +158,11 @@ pintos_init (void)
         printf("It's been  %d seconds now.", timer_ticks()/TIMER_FREQ); // Prints the time elapsed since boot. Timer ticks when divided by the tick frequency gives the answer in seconds.
       }
        else if (strcmp(command, "thread")==0){
-
+        printf("Stats of current ");
+        thread_print_stats();
       }
        else if (strcmp(command, "priority")==0){
-
+            printf("Priority level of the current thread is %d", thread_get_priority());
       }
        else if (strcmp(command, "exit")==0){
         printf("Exiting Interactive Mode...Bye!");

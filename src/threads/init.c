@@ -136,6 +136,7 @@ pintos_init (void)
     // TODO: no command line passed to kernel. Run interactively 
 
     while(true){
+      char *input_string = (char *)malloc(50 * sizeof(char));
       char input_char;
       input_init();
       printf("CS2042>");
@@ -145,8 +146,18 @@ pintos_init (void)
           printf("\n");
           break;
         }
-        printf("%c", input_char);
+        else if (input_char == '\b'){ //when backspace being pressed.
+          if (strlen(input_string) > 0){
+            printf("\b \b");
+            input_string[strlen(input_string)-1] = '\0';
+          }
+        } else { //when normal character being pressed. appending the character to the input_string.
+          input_string = (char *)realloc(input_string, sizeof(char) * (strlen(input_string) + 1));
+          input_string[strlen(input_string)] = input_char;
+          printf("%c", input_char);
       }
+      }
+      free( input_string );
     }
   }
 

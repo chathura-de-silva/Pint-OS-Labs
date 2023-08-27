@@ -135,17 +135,19 @@ pintos_init (void)
   } else {
     // TODO: no command line passed to kernel. Run interactively 
 
-    char input_char;
-    input_init();
-    printf("CS2042>");
-    while ( true ){
+    while(true){
+      char input_char;
+      input_init();
+      printf("CS2042>");
+      while ( true ){
         input_char = input_getc();
-        if (input_char == '\r'){
+        if (input_char == '\r'){ //when enter being pressed.
+          printf("\n");
           break;
-          }
+        }
         printf("%c", input_char);
+      }
     }
-    printf("oooooyee\n");
   }
 
   /* Finish up. */

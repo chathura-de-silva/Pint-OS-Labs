@@ -64,7 +64,8 @@ static char **read_command_line (void);
 static char **parse_options (char **argv);
 static void run_actions (char **argv);
 static void usage (void);
-
+//Functiond that was been declared by myself.
+void readline(char *input_string);
 #ifdef FILESYS
 static void locate_block_devices (void);
 static void locate_block_device (enum block_type, const char *name);
@@ -136,15 +137,36 @@ pintos_init (void)
     // TODO: no command line passed to kernel. Run interactively 
 
     while(true){
-      char *input_string = (char *)malloc(sizeof(char));
+      printf("CS2042>");
+      char *command = (char *)malloc(sizeof(char));
+      readline(command); //delcaratoin of the function is right below.
+
+
+
+
+
+
+      free(command);
+    }
+  }
+
+  /* Finish up. */
+  shutdown ();
+  thread_exit ();
+}
+
+/*This function takes a pointer to a string and then
+takes user inputs as charactors and puts them
+into the provided string*/
+void readline(char *input_string){
       char input_char;
       input_init();
-      printf("CS2042>");
+      
       while ( true ){
         input_char = input_getc();
         if (input_char == '\r'){ //when enter being pressed.
           printf("\n");
-          break;
+          return;
         }
         else if (input_char == '\b'){ //when backspace being pressed.
           if (strlen(input_string) > 0){
@@ -157,15 +179,7 @@ pintos_init (void)
           printf("%c", input_char);
       }
       }
-      free(input_string );
-    }
-  }
-
-  /* Finish up. */
-  shutdown ();
-  thread_exit ();
 }
-
 /* Clear the "BSS", a segment that should be initialized to
    zeros.  It isn't actually stored on disk or zeroed by the
    kernel loader, so we have to zero it ourselves.

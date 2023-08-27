@@ -65,7 +65,7 @@ static char **parse_options (char **argv);
 static void run_actions (char **argv);
 static void usage (void);
 //Functiond that was been declared by myself.
-void readline(char *input_string);
+void readline(char *input_string, int max_string_length);
 #ifdef FILESYS
 static void locate_block_devices (void);
 static void locate_block_device (enum block_type, const char *name);
@@ -138,15 +138,24 @@ pintos_init (void)
 
     while(true){
       printf("CS2042>");
-      char *command = (char *)malloc(sizeof(char));
-      readline(command); //delcaratoin of the function is right below.
+      int max_command_length = 20;
+      char command[max_command_length]; //command array to store the command. it has a max length of 20.
+      memset(command, 0, sizeof(command)); //initializing the command array with null characters.
 
-
-
-
-
-
-      free(command);
+      readline(command,max_command_length); //delcaratoin of the function is right below.
+      // printf(command); //Uncomment for debugging.
+      if (strcmp(command, "whoami")==0){
+        printf("Chathura De Silva - 210098R");
+      }
+      else if (strcmp(command, "ram")==0){
+        printf("Pintos currently has %'"PRIu32" kB RAM.",
+          init_ram_pages * PGSIZE / 1024);
+      }
+      else{
+        printf("Error1: Unknown command!");
+      }
+      printf("\n");
+      
     }
   }
 
@@ -157,25 +166,31 @@ pintos_init (void)
 
 /*This function takes a pointer to a string and then
 takes user inputs as charactors and puts them
-into the provided string*/
-void readline(char *input_string){
+into the provided string also this updates the terminal in realtime so that user can what he/she/etc has inputted*/
+void readline(char *input_string, int max_string_length){
       char input_char;
+      int arr_length = 0;
       input_init();
       
       while ( true ){
         input_char = input_getc();
+        if (arr_length> max_string_length){
+          printf("\nError2: Command too long!\n");
+          return;
+        }
         if (input_char == '\r'){ //when enter being pressed.
           printf("\n");
           return;
         }
         else if (input_char == '\b'){ //when backspace being pressed.
-          if (strlen(input_string) > 0){
+          if (arr_length > 0){
             printf("\b \b");
-            input_string[strlen(input_string)-1] = '\0';
+            input_string[arr_length-1] = '\0';
+            arr_length--;
           }
         } else { //when normal character being pressed. appending the character to the input_string.
-          input_string ==NULL ? input_string = (char *)realloc(input_string, sizeof(char) * (strlen(input_string) + 1)) : NULL;
-          input_string[strlen(input_string)] = input_char;
+          input_string[arr_length] = input_char;
+          arr_length++;
           printf("%c", input_char);
       }
       }

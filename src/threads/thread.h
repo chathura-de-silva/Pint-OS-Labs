@@ -4,15 +4,18 @@
 #include <debug.h>
 #include <list.h>
 #include <stdint.h>
+#include "threads/synch.h"
+
+
 
 /* States in a thread's life cycle. */
 enum thread_status
-  {
+{
     THREAD_RUNNING,     /* Running thread. */
     THREAD_READY,       /* Not running but ready to run. */
     THREAD_BLOCKED,     /* Waiting for an event to trigger. */
     THREAD_DYING        /* About to be destroyed. */
-  };
+};
 
 /* Thread identifier type.
    You can redefine this to whatever type you like. */
@@ -23,6 +26,11 @@ typedef int tid_t;
 #define PRI_MIN 0                       /* Lowest priority. */
 #define PRI_DEFAULT 31                  /* Default priority. */
 #define PRI_MAX 63                      /* Highest priority. */
+
+#define STILL_ALIVE 2                   /* thread still alive */
+#define WAS_KILLED 0                    /* thread was killed */
+#define HAD_EXITED 1                    /* thread had exited */
+#define INIT_STATUS -100            /* initial current status*/
 
 /* A kernel thread or user process.
 
@@ -81,7 +89,7 @@ typedef int tid_t;
    ready state is on the run queue, whereas only a thread in the
    blocked state is on a semaphore wait list. */
 struct thread
-  {
+{
     /* Owned by thread.c. */
     tid_t tid;                          /* Thread identifier. */
     enum thread_status status;          /* Thread state. */
@@ -93,6 +101,24 @@ struct thread
     /* Shared between thread.c and synch.c. */
     struct list_elem elem;              /* List element. */
 
+
+
+    /**Phase 2**/
+
+    /*file file descriptors*/
+    struct list fd_list; 				/*list of file descriptors*/
+    int fd_size;						/*size of the file descriptors*/
+
+    /*exectable file should not edited while running*/
+    struct file *exec_file;				/*execeted file held by this thread*/
+
+    /*execute and wait*/
+    struct semaphore sema_exec;     /*parent wait child to load*/
+    struct semaphore sema_wait;     /*current thread wait pid child to exit*/
+    struct list child_list;         /*lsit of children this thread have*/
+    struct thread * parent;         /*pointer to this thread's dad*/
+
+
 #ifdef USERPROG
     /* Owned by userprog/process.c. */
     uint32_t *pagedir;                  /* Page directory. */
@@ -100,7 +126,19 @@ struct thread
 
     /* Owned by thread.c. */
     unsigned magic;                     /* Detects stack overflow. */
-  };
+};
+
+
+struct child_element
+{
+    struct list_elem child_elem;    /*list elem used to add in child_list */
+    struct thread * real_child;     /*pointer to the real thread child*/
+    int exit_status;                /*the status the child thread exit with*/
+    int cur_status;                 /*the child thread current status*/
+    int child_pid;                  /*pid of this child*/
+    bool first_time;                /*to check if wait() is called before?*/
+    bool loaded_success;            /*to check if load success*/
+};
 
 /* If false (default), use round-robin scheduler.
    If true, use multi-level feedback queue scheduler.
@@ -137,5 +175,7 @@ int thread_get_nice (void);
 void thread_set_nice (int);
 int thread_get_recent_cpu (void);
 int thread_get_load_avg (void);
+
+struct thread *thread_get (tid_t tid);
 
 #endif /* threads/thread.h */

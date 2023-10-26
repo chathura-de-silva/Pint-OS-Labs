@@ -39,6 +39,10 @@ This is Lab-0 of the CS2042 Operating Systems series. In this lab, we'll create 
 - No access to the standard C library, so implemented essential functions and some are available as a library built in to pint os.
 - Utilize functions from `devices/input.c`, `lib/stdio.c`, and `lib/kernel/console.c`.
 - No need to create new files or edit the Makefile.
+
+> [!IMPORTANT]
+> Modified :
+> * `src/threads/init.c`     
   
 # Lab 2: User Programs
 
@@ -68,4 +72,14 @@ The project requires interfacing with the file system, which is provided in the 
 
 > [!NOTE]
 > To see the test case results or the grade, cd in to the `src/userprog/` and run `make check` or `make grade`
- 
+
+ > [!IMPORTANT]
+> Modified :
+> * `src/threads/thread.c`  
+> * `src/threads/thread.h`
+> *  `src/userprog/syscall.c`
+> *  `src/userprog/syscall.h`
+> *  `src/userprog/process.c`
+> *  `src/userprog/process.h`
+> *  `src/userprog/exception.c`
+

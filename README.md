@@ -71,7 +71,8 @@ The project requires interfacing with the file system, which is provided in the 
 * The `pintos-mkdisk` command is used to create a simulated disk with a file system partition, and the pintos -p and pintos -g commands are used to copy files into and out of the simulated file system.
 
 > [!NOTE]
-> To see the test case results or the grade, cd in to the `src/userprog/` and run `make check` or `make grade`
+> * To see the test case results or the grade, cd in to the `src/userprog/` and run `make check` or `make grade`.
+> * You may have to manually delete the `build` directory inside the above specified path to run the above command again from scratch.
 
  > [!IMPORTANT]
 > Modified :
